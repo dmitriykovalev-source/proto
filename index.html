@@ -269,7 +269,6 @@
   }
   .badge.is-edited{background:var(--purple-soft);box-shadow:inset 0 0 0 1px var(--purple-border);color:var(--purple-700)}
   .card-top .r{display:flex;gap:var(--s-8);align-items:center}
-  .btn-history{width:100px;height:32px;padding:4px 12px;gap:8px}
   .btn-edit{height:32px;padding:4px var(--s-12);gap:8px}
   .btn-chevron{
     width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;
@@ -286,12 +285,10 @@
     color:var(--purple-700);white-space:nowrap;
   }
   .card.is-editing .editing-tag{display:flex}
-  .card.is-editing .btn-history,
   .card.is-editing .btn-edit,
   .card.is-editing .btn-chevron{display:none}
-  /* while one card is being edited, no other card offers Edit or History — but they still open */
+  /* while one card is being edited, no other card offers Edit — but they still open */
   body.is-editing .card:not(.is-editing) .btn-edit{display:none}
-  body.is-editing .btn-history{display:none}
 
   /* accordion mechanics — heights are driven from JS so the swap can animate */
   .card-body{display:flex;flex-direction:column}
@@ -658,7 +655,6 @@
 
 <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
 <symbol id="i-copy" viewBox="0 0 16 16"><g fill="none" transform="translate(1.9167 1.9167)"><path d="M8.75 3.41667V2.08333C8.75 1.72971 8.60952 1.39057 8.35948 1.14052C8.10943 0.890476 7.77029 0.75 7.41667 0.75H2.08333C1.72971 0.75 1.39057 0.890476 1.14052 1.14052C0.890476 1.39057 0.75 1.72971 0.75 2.08333V7.41667C0.75 7.77029 0.890476 8.10943 1.14052 8.35948C1.39057 8.60952 1.72971 8.75 2.08333 8.75H3.41667M3.41667 4.75C3.41667 4.39638 3.55714 4.05724 3.80719 3.80719C4.05724 3.55714 4.39638 3.41667 4.75 3.41667H10.0833C10.437 3.41667 10.7761 3.55714 11.0261 3.80719C11.2762 4.05724 11.4167 4.39638 11.4167 4.75V10.0833C11.4167 10.437 11.2762 10.7761 11.0261 11.0261C10.7761 11.2762 10.437 11.4167 10.0833 11.4167H4.75C4.39638 11.4167 4.05724 11.2762 3.80719 11.0261C3.55714 10.7761 3.41667 10.437 3.41667 10.0833V4.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
-<symbol id="i-clock" viewBox="0 0 16 16"><g fill="none" transform="translate(1.25 1.25)"><path d="M6.75 3.41667V6.75L8.75 8.75M0.75 6.75C0.75 7.53793 0.905195 8.31815 1.20672 9.0461C1.50825 9.77405 1.95021 10.4355 2.50736 10.9926C3.06451 11.5498 3.72595 11.9917 4.4539 12.2933C5.18185 12.5948 5.96207 12.75 6.75 12.75C7.53793 12.75 8.31815 12.5948 9.0461 12.2933C9.77405 11.9917 10.4355 11.5498 10.9926 10.9926C11.5498 10.4355 11.9917 9.77405 12.2933 9.0461C12.5948 8.31815 12.75 7.53793 12.75 6.75C12.75 5.1587 12.1179 3.63258 10.9926 2.50736C9.86742 1.38214 8.3413 0.75 6.75 0.75C5.1587 0.75 3.63258 1.38214 2.50736 2.50736C1.38214 3.63258 0.75 5.1587 0.75 6.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
 <symbol id="i-chevron-down-btn" viewBox="0 0 16 16"><g fill="none" transform="translate(3.25 5.25)"><path d="M0.75 0.75L4.75 4.75L8.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
 <symbol id="i-chevron-down-sec" viewBox="0 0 16 16"><g fill="none" transform="translate(3.25 5.25)"><path d="M0.75 0.75L4.75 4.75L8.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
 <symbol id="i-chevron-up-sec" viewBox="0 0 16 16"><g fill="none" transform="translate(3.25 5.25)"><path d="M0.75 4.75L4.75 0.75L8.75 4.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
@@ -964,7 +960,7 @@ const POSITIONS = [
     ] },
 
   { pid: 'PID-2174', pic: 'svetlana', name: 'Svetlana Orlova', role: 'Compensation Strategy Lead',
-    state: 'closed', badges: [], history: false,
+    state: 'closed', badges: [],
     attributes: { title: 'Compensation Strategy Lead', perimeter: 'RU', function: 'HR',
       grade: null, priority: null, company: 'Acme Holding RU', costCenter: 'CC-2010 People',
       contract: 'Labour contract', currency: 'USD', salary: 9000, hasBonus: true,
@@ -1379,12 +1375,6 @@ function cardHtml(c){
         ? `<span class="badge">${b}</span>`
         : `<span class="badge is-edited">${b.text}</span>`).join('')}</div>` : '';
 
-  const history = c.history === false ? '' : `
-    <button class="btn btn-history" type="button">
-      ${ICON('clock',16)}
-      History
-    </button>`;
-
   const collapsed = `
     <div class="card-bottom">
       <div class="cell-user">${personHtml(c)}</div>
@@ -1465,7 +1455,6 @@ function cardHtml(c){
         </div>
         <div class="r">
           <span class="editing-tag">${ICON('edit',16)} Editing</span>
-          ${history}
           <button class="btn btn-edit" type="button" data-edit="${c.pid}">${ICON('edit',16)} Edit</button>
           <button class="btn-chevron" type="button" aria-label="Toggle details">
             ${ICON('chevron-down-btn',16)}
@@ -2455,7 +2444,7 @@ function bindCards(){
   document.querySelectorAll('.card[data-expandable]').forEach(card => {
     card.querySelector('.card-top').addEventListener('click', e => {
       if (card.classList.contains('is-editing')) return;   // other cards still open while one is edited
-      if (e.target.closest('.btn-history, .btn-edit, .copy, a')) return;
+      if (e.target.closest('.btn-edit, .copy, a')) return;
       card.classList.toggle('is-open');
       syncFolds(card, true);
     });
